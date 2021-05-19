@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-@WebFilter("/test")
+@WebFilter("/servlet")
 public class TestFilter implements Filter {
 
 	public TestFilter() {

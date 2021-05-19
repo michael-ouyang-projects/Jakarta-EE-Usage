@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>WebSocket Chat</title>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript">
+            var websocket;
+            function init() {
+                websocket = new WebSocket('ws://localhost:8080/websocket');
+                
+                websocket.onopen = function(event) {
+                    websocketOpen(event)
+                };
+                websocket.onmessage = function(event) {
+                    websocketMessage(event)
+                };
+                websocket.onerror = function(event) {
+                    websocketError(event)
+                };
+                
+            }
+
+            function websocketOpen(event) {
+                console.log("webSocketOpen invoked");
+            }
+
+            function websocketMessage(event) {
+                console.log("websocketMessage invoked");
+                document.getElementById('chatwindow').value += '\r' + event.data;
+            }
+
+            function websocketError(event) {
+                console.log("websocketError invoked");
+            }
+
+            function sendMessage() {
+                var userName = document.getElementById('username').value;
+                var msg = document.getElementById('chatinput').value;
+
+                websocket.send(userName + ": " + msg);
+            }
+            
+            function closeConnection(){
+                websocket.close();
+            }
+
+            window.addEventListener("load", init, false);
+        </script>
+</head>
+
+<body>
+    <form>
+        <input type="hidden" id="username" th:value="${session.username}"/>
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="chatwindow">Chat Window</label></td>
+                    <td><textarea id="chatwindow" rows="10"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="chatinput">Type Something Here</label></td>
+                    <td><input type="text" id="chatinput"/>
+                    <input type="button" value="Send" onclick="sendMessage()"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="button" value="Exit" onclick="closeConnection()"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>
